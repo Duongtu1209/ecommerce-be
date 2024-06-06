@@ -29,6 +29,11 @@ const createUser = (newUser) => {
           message: "User created successfully",
           data: createUser,
         });
+      } else {
+        resolve({
+          status: "ERR",
+          message: "There was an error during user creation",
+        });
       }
     } catch (err) {
       reject(err);
@@ -82,7 +87,7 @@ const loginUser = (userLogin) => {
 const updateUser = (id, data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findOne({ id });
+      const user = await User.findOne({ _id: id });
       if (user === null) {
         resolve({
           status: "Err",
@@ -106,7 +111,7 @@ const updateUser = (id, data) => {
 const deleteUser = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findOne({ id });
+      const user = await User.findOne({ _id: id });
       if (user === null) {
         resolve({
           status: "Err",
@@ -145,7 +150,7 @@ const getAllUser = () => {
 const getDetailsUser = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const user = await User.findOne({ id });
+      const user = await User.findOne({ _id: id });
       if (user === null) {
         resolve({
           status: "Err",

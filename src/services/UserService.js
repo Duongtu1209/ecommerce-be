@@ -57,7 +57,7 @@ const loginUser = (userLogin) => {
           message: "The password or user is incorrect",
         });
       }
-      const access_token = generalAccessToken({
+      const access_token = await generalAccessToken({
         id: user.id,
         isAdmin: user.isAdmin,
       });
@@ -114,11 +114,49 @@ const deleteUser = (id) => {
         });
       }
 
-    //   await User.findByIdAndDelete(id, { new: true });
+      await User.findByIdAndDelete(id, { new: true });
 
       resolve({
         status: "OK",
         message: "User deleted successfully",
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const getAllUser = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allUser = await User.find();
+
+      resolve({
+        status: "OK",
+        message: "successfully",
+        data: allUser,
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const getDetailsUser = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findOne({ id });
+      if (user === null) {
+        resolve({
+          status: "Err",
+          message: "The user does not exist",
+        });
+      }
+
+      resolve({
+        status: "OK",
+        message: "successfully",
+        data: user,
       });
     } catch (err) {
       reject(err);
@@ -131,4 +169,6 @@ module.exports = {
   loginUser,
   updateUser,
   deleteUser,
+  getAllUser,
+  getDetailsUser,
 };

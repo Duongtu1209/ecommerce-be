@@ -4,14 +4,14 @@ const { generalAccessToken, generalRefreshToken } = require("./jwtService");
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
-    const { name, email, password, phone } = newUser;
+    const { name, email, password, phone, isAdmin } = newUser;
     try {
       const existUser = await User.findOne({
         email,
       });
       if (existUser !== null) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "User already exists",
         });
       }
@@ -21,6 +21,7 @@ const createUser = (newUser) => {
         password: hash,
         email,
         phone,
+        isAdmin,
       });
 
       if (createUser) {
@@ -50,7 +51,7 @@ const loginUser = (userLogin) => {
       });
       if (user === null) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "The user not defined",
         });
       }
@@ -58,7 +59,7 @@ const loginUser = (userLogin) => {
       const comparePassword = bcrypt.compareSync(password, user.password);
       if (!comparePassword) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "The password or user is incorrect",
         });
       }
@@ -90,7 +91,7 @@ const updateUser = (id, data) => {
       const user = await User.findOne({ _id: id });
       if (user === null) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "The user does not exist",
         });
       }
@@ -114,7 +115,7 @@ const deleteUser = (id) => {
       const user = await User.findOne({ _id: id });
       if (user === null) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "The user does not exist",
         });
       }
@@ -153,7 +154,7 @@ const getDetailsUser = (id) => {
       const user = await User.findOne({ _id: id });
       if (user === null) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "The user does not exist",
         });
       }

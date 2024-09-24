@@ -10,7 +10,7 @@ const create = (newProduct) => {
       });
       if (existProduct !== null) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "Product already exists",
         });
       }
@@ -24,7 +24,7 @@ const create = (newProduct) => {
         });
       } else {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "There was an error during product creation",
         });
       }
@@ -40,7 +40,7 @@ const update = (id, data) => {
       const product = await Product.findOne({ _id: id });
       if (product === null) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "The product does not exist",
         });
       }
@@ -66,7 +66,7 @@ const getDetailsProduct = (id) => {
       const product = await Product.findOne({ _id: id });
       if (product === null) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "The product does not exist",
         });
       }
@@ -88,7 +88,7 @@ const deleteProduct = (id) => {
       const product = await Product.findOne({ _id: id });
       if (product === null) {
         resolve({
-          status: "Err",
+          status: "ERR",
           message: "The product does not exist",
         });
       }

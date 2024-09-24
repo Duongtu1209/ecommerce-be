@@ -7,17 +7,17 @@ const createUser = async (req, res) => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const isCheckEmail = reg.test(email);
     if (!email || !password || !confirmPassword) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "This field is a required field",
       });
     } else if (!isCheckEmail) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "Email must be a valid email",
       });
     } else if (password !== confirmPassword) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "Confirm password not match",
       });
@@ -36,23 +36,25 @@ const loginUser = async (req, res) => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const isCheckEmail = reg.test(email);
     if (!email || !password) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "This field is a required field",
       });
     } else if (!isCheckEmail) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "The email must be a valid email",
       });
     }
 
     const response = await UserService.loginUser(req.body);
-    const { refresh_token, ...newResponse } = response;
+    const { refresh_token, ...newResponse } = response;    
     res.cookie("refresh_token", refresh_token, {
-      HttpOnly: true,
-      Secure: true,
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict'
     });
+
     return res.status(200).json(newResponse);
   } catch (error) {
     return res.status(404).json({ message: error });
@@ -70,27 +72,27 @@ const updateUser = async (req, res) => {
     const isCheckEmail = reg.test(email);
     const isCheckPhone = phoneno.test(phone);
     if (!userId) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "The user does not exist",
       });
     } else if (!name || !email || !password || !confirmPassword || !phone) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "This field is a required field",
       });
     } else if (!isCheckEmail) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "Email must be a valid email",
       });
     } else if (password !== confirmPassword) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "Confirm password not match",
       });
     } else if (!isCheckPhone) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message:
           "Phone number must be 10 characters long and must be a numeric string",
@@ -108,7 +110,7 @@ const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
     if (!userId) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "The user does not exist",
       });
@@ -129,11 +131,11 @@ const getAllUser = async (req, res) => {
   }
 };
 
-const getDetailsUser = async () => {
-  try {
-    const userId = req.params.id;
+const getDetailsUser = async (req, res) => {
+  try {    
+    const userId = req.params.id;        
     if (!userId) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "The user does not exist",
       });
@@ -145,17 +147,31 @@ const getDetailsUser = async () => {
   }
 };
 
-const refreshToken = async () => {
-  try {
-    const token = req.cookie.refresh_token;
+const refreshToken = async (req, res) => {    
+  try {    
+    const token = req.cookies.refresh_token;
     if (!token) {
-      return res.status(500).json({
+      return res.json({
         status: "ERR",
         message: "The authentication",
       });
     }
     const response = await JwtService.refreshToken(token);
     return res.status(200).json(response);
+  } catch (error) {
+    return res.status(404).json({ message: error });
+  }
+};
+
+const logoutUser = async (req, res) => {
+  
+  try {
+    res.clearCookie('refresh_token')
+
+    return res.status(200).json({
+      status: 'OK',
+      message: 'Logout successfully'
+    });
   } catch (error) {
     return res.status(404).json({ message: error });
   }
@@ -169,4 +185,5 @@ module.exports = {
   getAllUser,
   getDetailsUser,
   refreshToken,
+  logoutUser
 };

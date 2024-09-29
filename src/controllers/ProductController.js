@@ -34,7 +34,7 @@ const update = async (req, res) => {
   }
 };
 
-const getDetailsProduct = async () => {
+const getDetailsProduct = async (req, res) => {
   try {
     const productId = req.params.id;
     if (!productId) {
@@ -67,7 +67,7 @@ const deleteProduct = async (req, res) => {
 };
 
 const getAllProduct = async (req, res) => {
-  try {
+  try {    
     const { limit, page, sort, filter } = req.query;
     const response = await ProductService.getAllProduct(
       Number(limit) || 10,

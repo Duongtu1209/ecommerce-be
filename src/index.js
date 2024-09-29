@@ -12,6 +12,8 @@ const app = expess();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
+app.use(expess.json({limit: '50mb'}));
+app.use(expess.urlencoded({limit: '50mb', extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 

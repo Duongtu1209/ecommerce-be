@@ -6,7 +6,7 @@ const {
   authUserMiddleware,
 } = require("../middleware/authMiddleware");
 
-routes.get("/get-all", userController.getAllUser);
+routes.get("/get-all", authMiddleware, userController.getAllUser);
 routes.post("/refresh-token", userController.refreshToken);
 routes.post("/sign-up", userController.createUser);
 routes.post("/sign-in", userController.loginUser);

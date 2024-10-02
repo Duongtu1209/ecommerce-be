@@ -48,7 +48,7 @@ const loginUser = (userLogin) => {
     try {
       const user = await User.findOne({
         email,
-      });
+      });      
       if (user === null) {
         resolve({
           status: "ERR",
@@ -65,12 +65,12 @@ const loginUser = (userLogin) => {
       }
       const access_token = await generalAccessToken({
         id: user.id,
-        isAdmin: user.isAdmin,
+        isAdmin: user?.isAdmin,
       });
 
       const refresh_token = await generalRefreshToken({
         id: user.id,
-        isAdmin: user.isAdmin,
+        isAdmin: user?.isAdmin,
       });      
 
       resolve({

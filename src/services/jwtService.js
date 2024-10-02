@@ -38,7 +38,7 @@ const refreshToken = (token) => {
         }
         const access_token = await generalAccessToken({
           id: user?.id,
-          isAmin: user?.isAmin,
+          isAdmin: user?.isAdmin,
         });
         resolve({
           status: "OK",

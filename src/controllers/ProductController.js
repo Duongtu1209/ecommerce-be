@@ -2,8 +2,8 @@ const ProductService = require("../services/ProductService");
 
 const create = async (req, res) => {
   try {
-    const { name, type, price, quantity, image, sku } = req.body;
-    if (!name || !type || !price || !quantity || !image || !sku) {      
+    const { name, type, price, quantity, sku } = req.body;
+    if (!name || !type || !price || !quantity  || !sku) {      
       return res.status(500).json({
         status: "ERR",
         message: "This field is a required field",
@@ -19,7 +19,7 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, type, price, quantity, sku } = req.body;
+    const {  name, type, price, quantity, sku  } = req.body;    
     if (!name || !type || !price || !quantity || !sku) {
       return res.status(500).json({
         status: "ERR",

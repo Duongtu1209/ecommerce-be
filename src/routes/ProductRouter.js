@@ -6,7 +6,7 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 routes.get("/get-all", productController.getAllProduct);
 routes.post("/create", productController.create);
 routes.put("/update/:id", authMiddleware, productController.update);
-routes.get("/:id", productController.getDetailsProduct);
+routes.get("/get-details/:id", productController.getDetailsProduct);
 routes.delete("/delete/:id", authMiddleware, productController.deleteProduct);
 
 module.exports = routes;

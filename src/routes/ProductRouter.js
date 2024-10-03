@@ -8,5 +8,5 @@ routes.post("/create", productController.create);
 routes.put("/update/:id", authMiddleware, productController.update);
 routes.get("/get-details/:id", productController.getDetailsProduct);
 routes.delete("/delete/:id", authMiddleware, productController.deleteProduct);
-
+routes.post('/delete-many',authMiddleware, productController.deleteMany)
 module.exports = routes;

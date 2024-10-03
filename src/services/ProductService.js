@@ -109,7 +109,7 @@ const getAllProduct = (limit = 10, page = 0, sort, filter) => {
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.countDocuments();
-      if (filter) {
+      if (filter) {        
         const label = filter[0];
         const allProductFilter = await Product.find({
           [label]: { $regex: filter[1] },
@@ -165,10 +165,25 @@ const getAllProduct = (limit = 10, page = 0, sort, filter) => {
   });
 };
 
+const deleteMany = (ids) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await Product.deleteMany({_id: ids})
+      resolve({
+        status: "OK",
+        message: "The product deleted successfully",
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 module.exports = {
   create,
   update,
   getDetailsProduct,
   deleteProduct,
   getAllProduct,
+  deleteMany
 };

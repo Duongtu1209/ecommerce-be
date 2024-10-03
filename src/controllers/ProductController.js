@@ -68,7 +68,7 @@ const deleteProduct = async (req, res) => {
 
 const getAllProduct = async (req, res) => {
   try {    
-    const { limit, page, sort, filter } = req.query;
+    const { limit, page, sort, filter } = req.query;    
     const response = await ProductService.getAllProduct(
       Number(limit) || 10,
       Number(page) || 0,
@@ -81,10 +81,27 @@ const getAllProduct = async (req, res) => {
   }
 };
 
+const deleteMany = async (req, res) => {
+  try {    
+    const ids = req.body.ids;
+    if (!ids) {
+      return res.status(500).json({
+        status: "ERR",
+        message: "The ids does not exist",
+      });
+    }
+    const response = await ProductService.deleteMany(ids);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(404).json({ message: error });
+  }
+};
+
 module.exports = {
   create,
   update,
   getDetailsProduct,
   deleteProduct,
   getAllProduct,
+  deleteMany
 };

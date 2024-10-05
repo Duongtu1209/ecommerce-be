@@ -4,6 +4,7 @@ const productController = require("../controllers/ProductController");
 const { authMiddleware } = require("../middleware/authMiddleware");
 
 routes.get("/get-all", productController.getAllProduct);
+routes.get("/get-all-origin", productController.getAllOrigin);
 routes.post("/create", productController.create);
 routes.get("/get-all-type", productController.getAllType);
 routes.put("/update/:id", authMiddleware, productController.update);

@@ -165,6 +165,22 @@ const getAllProduct = (limit = 10, page = 0, sort, filter) => {
   });
 };
 
+const getAllOrigin = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allProduct = await Product.find()
+      resolve({
+        status: "OK",
+        message: "successfully",
+        data: allProduct,
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+
 const getAllType = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -204,4 +220,5 @@ module.exports = {
   getAllProduct,
   deleteMany,
   getAllType,
+  getAllOrigin,
 };

@@ -81,6 +81,15 @@ const getAllProduct = async (req, res) => {
   }
 };
 
+const getAllOrigin = async (req, res) => {
+  try {
+    const response = await ProductService.getAllOrigin();
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(404).json({ message: error });
+  }
+};
+
 const getAllType = async (req, res) => {
   try {
     const response = await ProductService.getAllType();
@@ -114,4 +123,5 @@ module.exports = {
   getAllProduct,
   deleteMany,
   getAllType,
+  getAllOrigin,
 };

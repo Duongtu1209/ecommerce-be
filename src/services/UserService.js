@@ -12,10 +12,50 @@ const createUser = (newUser) => {
       if (existUser !== null) {
         resolve({
           status: "ERR",
-          message: "User already exists",
+          message: "Tài khoàn đã tồn tại",
         });
       }
       const hash = bcrypt.hashSync(password, 10);
+      const createUser = await User.create({
+        name,
+        password: hash,
+        email,
+        phone,
+        isAdmin,
+      });
+
+      if (createUser) {
+        resolve({
+          status: "OK",
+          message: "User created successfully",
+          data: createUser,
+        });
+      } else {
+        resolve({
+          status: "ERR",
+          message: "There was an error during user creation",
+        });
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const createUserByAdmin = (newUser) => {
+  return new Promise(async (resolve, reject) => {
+    const { name, email, phone, isAdmin } = newUser;
+    try {
+      const existUser = await User.findOne({
+        email,
+      });
+      if (existUser !== null) {
+        resolve({
+          status: "ERR",
+          message: "Tài khoàn đã tồn tại",
+        });
+      }
+      const hash = bcrypt.hashSync('', 10);
       const createUser = await User.create({
         name,
         password: hash,
@@ -52,7 +92,7 @@ const loginUser = (userLogin) => {
       if (user === null) {
         resolve({
           status: "ERR",
-          message: "The user not defined",
+          message: "The user not exist",
         });
       }
 
@@ -185,6 +225,38 @@ const getDetailsUser = (id) => {
   });
 };
 
+const changePassword = (userId, oldPassword, newPassword) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findById(userId);
+      if (user === null) {
+        return resolve({
+          status: "ERR",
+          message: "User does not exist",
+        });
+      }
+
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return resolve({
+          status: "ERR",
+          message: "Old password is incorrect",
+        });
+      }
+
+      user.password = await bcrypt.hash(newPassword, 10);
+      await user.save();
+
+      return resolve({
+        status: "OK",
+        message: "Password updated successfully",
+      });
+    } catch (err) {
+      return reject(err);
+    }
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -192,5 +264,7 @@ module.exports = {
   deleteUser,
   getAllUser,
   getDetailsUser,
-  deleteMany
+  deleteMany,
+  createUserByAdmin,
+  changePassword
 };

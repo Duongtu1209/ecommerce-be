@@ -14,7 +14,7 @@ const createUser = async (req, res) => {
     } else if (!isCheckEmail) {
       return res.json({
         status: "ERR",
-        message: "Email must be a valid email",
+        message: "The email must be a valid email",
       });
     } else if (password !== confirmPassword) {
       return res.json({
@@ -24,6 +24,24 @@ const createUser = async (req, res) => {
     }
 
     const response = await UserService.createUser(req.body);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(404).json({ message: error });
+  }
+};
+
+const createUserByAdmin = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const isCheckEmail = reg.test(email);
+     if (!isCheckEmail) {
+      return res.json({
+        status: "ERR",
+        message: "The email must be a valid email",
+      });
+    } 
+    const response = await UserService.createUserByAdmin(req.body);
     return res.status(200).json(response);
   } catch (error) {
     return res.status(404).json({ message: error });
@@ -167,6 +185,24 @@ const logoutUser = async (req, res) => {
   }
 };
 
+const handleChangePassword = async (req, res) => {
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  const userId = req.params.id;
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({
+      status: "ERR",
+      message: "New password and confirmation do not match",
+    });
+  }
+
+  try {
+    const response = await UserService.changePassword(userId, oldPassword, newPassword);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({ status: "ERR", message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -176,5 +212,7 @@ module.exports = {
   getDetailsUser,
   refreshToken,
   logoutUser,
-  deleteMany
+  deleteMany,
+  createUserByAdmin,
+  handleChangePassword
 };

@@ -112,7 +112,7 @@ const getAllProduct = (limit = 10, page = 0, sort, filter) => {
       if (filter) {        
         const label = filter[0];
         const allProductFilter = await Product.find({
-          [label]: { $regex: filter[1] },
+          [label]: { $regex: filter[1], $options: "i" },
         })
           .limit(limit)
           .skip(page * limit)
